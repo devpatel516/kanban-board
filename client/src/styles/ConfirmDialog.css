@@ -2,7 +2,7 @@
    When to edit: adjust dialog sizing, button layout, or warning text styling. */
 
 .confirm-dialog {
-  background-color: var(--color-surface);
+  background-color: var(--color-modal-background);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-modal);
   width: 100%;
@@ -35,4 +35,3 @@
   gap: var(--space-sm);
   padding-top: var(--space-xs);
 }
-

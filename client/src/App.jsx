@@ -9,7 +9,28 @@ function App() {
   return (
     <div className="app">
       {/* Toast notification container mounted globally */}
-      <Toaster position="top-right" />
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: {
+            background: "var(--color-toast-background)",
+            color: "var(--color-toast-text)",
+            border: "1px solid var(--color-border)",
+          },
+          success: {
+            iconTheme: {
+              primary: "var(--color-toast-success)",
+              secondary: "var(--color-toast-background)",
+            },
+          },
+          error: {
+            iconTheme: {
+              primary: "var(--color-toast-error)",
+              secondary: "var(--color-toast-background)",
+            },
+          },
+        }}
+      />
 
       {/* Top branding bar */}
       <Header />

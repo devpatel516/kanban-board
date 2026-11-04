@@ -1,62 +1,121 @@
-/* What this file does: defines every colour, size, and spacing value used across the app.
-   When to edit: change a colour theme, adjust spacing, or add a new column/priority colour.
-   All CSS variables live here so you only ever change a colour in ONE place. */
+/* What this file does: defines the light and dark palettes plus shared layout values.
+   When to edit: change a theme color or add a new theme's color tokens here. */
 
 :root {
-  /* ── Backgrounds ─────────────────────────────────────────────────────────── */
-  --color-bg: #f0f4f8;           /* page background */
-  --color-surface: #ffffff;       /* cards, columns, modals */
-  --color-surface-hover: #f8fafc; /* card hover tint */
-
-  /* ── Text ────────────────────────────────────────────────────────────────── */
-  --color-text: #1e293b;          /* primary text */
-  --color-text-muted: #64748b;    /* secondary / helper text */
-  --color-text-light: #94a3b8;    /* placeholder, counts */
-
-  /* ── Borders & Shadows ───────────────────────────────────────────────────── */
-  --color-border: #e2e8f0;
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
-  --shadow-card-hover: 0 4px 14px rgba(0, 0, 0, 0.12);
-  --shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.35);
-
-  /* ── Primary action (buttons, focus rings) ───────────────────────────────── */
-  --color-primary: #6366f1;
-  --color-primary-hover: #4f46e5;
-  --color-primary-text: #ffffff;
-
-  /* ── Danger (delete) ─────────────────────────────────────────────────────── */
-  --color-danger: #ef4444;
-  --color-danger-hover: #dc2626;
-  --color-danger-text: #ffffff;
-
-  /* ── Column accent colours (header stripe + badge) ───────────────────────── */
-  --color-todo: #3b82f6;
-  --color-in-progress: #f59e0b;
-  --color-done: #22c55e;
-
-  /* ── Priority badge colours ──────────────────────────────────────────────── */
-  --color-priority-high-bg: #fee2e2;
-  --color-priority-high-text: #991b1b;
-  --color-priority-medium-bg: #fef3c7;
-  --color-priority-medium-text: #92400e;
-  --color-priority-low-bg: #dcfce7;
-  --color-priority-low-text: #166534;
-
-  /* ── Spacing scale ───────────────────────────────────────────────────────── */
+  color-scheme: light dark;
   --space-xs: 4px;
   --space-sm: 8px;
   --space-md: 16px;
   --space-lg: 24px;
   --space-xl: 32px;
-
-  /* ── Border radius ───────────────────────────────────────────────────────── */
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;
-
-  /* ── Layout ──────────────────────────────────────────────────────────────── */
   --column-width: 320px;
   --column-gap: var(--space-lg);
   --header-height: 64px;
 }
 
+[data-theme="light"] {
+  color-scheme: light;
+  --color-page-background: #F4F7FB;
+  --color-column-background: #FFFFFF;
+  --color-card-background: #FFFFFF;
+  --color-card-hover: #F8FAFC;
+  --color-modal-background: #FFFFFF;
+  --color-input-background: #FFFFFF;
+  --color-input-border: #718096;
+  --color-text-primary: #172033;
+  --color-text-secondary: #46546A;
+  --color-text-muted: #596579;
+  --color-border: #7C8798;
+  --color-border-strong: #46546A;
+  --color-primary: #4338CA;
+  --color-primary-hover: #3730A3;
+  --color-primary-text: #FFFFFF;
+  --color-danger: #B42318;
+  --color-danger-hover: #912018;
+  --color-danger-text: #FFFFFF;
+  --color-todo: #1D4ED8;
+  --color-in-progress: #854D0E;
+  --color-done: #166534;
+  --color-priority-high-bg: #FDE8E7;
+  --color-priority-high-text: #8A1C1C;
+  --color-priority-medium-bg: #FFF1CC;
+  --color-priority-medium-text: #704300;
+  --color-priority-low-bg: #DCFCE7;
+  --color-priority-low-text: #14532D;
+  --color-tag-background: #E7EDF5;
+  --color-tag-text: #334155;
+  --color-toast-background: #FFFFFF;
+  --color-toast-text: #172033;
+  --color-toast-success: #166534;
+  --color-toast-error: #B42318;
+  --color-drag-overlay-background: #FFFFFF;
+  --color-drag-overlay-border: #4F46E5;
+  --color-focus-ring: #4F46E5;
+  --color-focus-ring-shadow: rgba(79, 70, 229, 0.22);
+  --color-modal-backdrop: rgba(15, 23, 42, 0.6);
+  --shadow-card: 0 1px 3px rgba(23, 32, 51, 0.10), 0 1px 2px rgba(23, 32, 51, 0.06);
+  --shadow-card-hover: 0 4px 14px rgba(23, 32, 51, 0.18);
+  --shadow-modal: 0 24px 64px rgba(15, 23, 42, 0.35);
+
+  /* These aliases keep existing component styles easy to read during migration. */
+  --color-bg: var(--color-page-background);
+  --color-surface: var(--color-column-background);
+  --color-surface-hover: var(--color-card-hover);
+  --color-text: var(--color-text-primary);
+  --color-text-light: var(--color-text-muted);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --color-page-background: #111827;
+  --color-column-background: #1F2937;
+  --color-card-background: #273449;
+  --color-card-hover: #334155;
+  --color-modal-background: #1F2937;
+  --color-input-background: #111827;
+  --color-input-border: #9AA8BA;
+  --color-text-primary: #F3F4F6;
+  --color-text-secondary: #D1D5DB;
+  --color-text-muted: #B6C2D2;
+  --color-border: #718096;
+  --color-border-strong: #B6C2D2;
+  --color-primary: #A5B4FC;
+  --color-primary-hover: #C7D2FE;
+  --color-primary-text: #111827;
+  --color-danger: #F87171;
+  --color-danger-hover: #FCA5A5;
+  --color-danger-text: #1F0707;
+  --color-todo: #60A5FA;
+  --color-in-progress: #FBBF24;
+  --color-done: #4ADE80;
+  --color-priority-high-bg: #4C2025;
+  --color-priority-high-text: #FCA5A5;
+  --color-priority-medium-bg: #4A3518;
+  --color-priority-medium-text: #FCD34D;
+  --color-priority-low-bg: #173D2A;
+  --color-priority-low-text: #86EFAC;
+  --color-tag-background: #374151;
+  --color-tag-text: #E5E7EB;
+  --color-toast-background: #273449;
+  --color-toast-text: #F3F4F6;
+  --color-toast-success: #4ADE80;
+  --color-toast-error: #FCA5A5;
+  --color-drag-overlay-background: #273449;
+  --color-drag-overlay-border: #A5B4FC;
+  --color-focus-ring: #A5B4FC;
+  --color-focus-ring-shadow: rgba(165, 180, 252, 0.28);
+  --color-modal-backdrop: rgba(3, 7, 18, 0.76);
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.34), 0 1px 2px rgba(0, 0, 0, 0.24);
+  --shadow-card-hover: 0 4px 14px rgba(0, 0, 0, 0.48);
+  --shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.65);
+
+  /* Existing component styles can use the same familiar names in dark mode. */
+  --color-bg: var(--color-page-background);
+  --color-surface: var(--color-column-background);
+  --color-surface-hover: var(--color-card-hover);
+  --color-text: var(--color-text-primary);
+  --color-text-light: var(--color-text-muted);
+}

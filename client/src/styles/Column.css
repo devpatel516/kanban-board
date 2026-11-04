@@ -2,7 +2,7 @@
    When to edit: change column widths, card gap spacing, or empty state appearance. */
 
 .board-column {
-  background-color: var(--color-surface);
+  background-color: var(--color-column-background);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   width: var(--column-width);
