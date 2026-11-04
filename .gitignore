@@ -1,0 +1,13 @@
+# Dependency folders – never commit these, they are restored with npm install
+node_modules/
+
+# Environment files – contain secrets, never commit
+.env
+
+# Production build output
+dist/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
