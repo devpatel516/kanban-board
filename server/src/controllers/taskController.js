@@ -5,8 +5,78 @@ import mongoose from "mongoose";
 import { COLUMNS, MIN_GAP, ORDER_GAP } from "../constants.js";
 import { Task } from "../models/Task.js";
 
+// Returns tasks sorted for the board's columns and cards.
+export async function getTasks(req, res, next) {
+  try {
+    const tasks = await Task.find({ userId: req.user._id }).sort({ columnId: 1, orderIndex: 1 });
+    return res.json(tasks);
+  } catch (error) {
+    return next(error);
+  }
+}
+
+// Creates a task at the end of its selected column.
+export async function createTask(req, res, next) {
+  try {
+    const { columnId, title, description, priority, tags } = req.body;
+    const lastTask = await Task.findOne({ columnId, userId: req.user._id }).sort({ orderIndex: -1 });
+    const orderIndex = lastTask ? lastTask.orderIndex + ORDER_GAP : ORDER_GAP;
+    const task = await Task.create({
+      title,
+      description,
+      priority,
+      tags,
+      columnId,
+      orderIndex,
+      userId: req.user._id,
+    });
+
+    return res.status(201).json(task);
+  } catch (error) {
+    return next(error);
+  }
+}
+
+// Updates editable task details without changing its column or ordering.
+export async function updateTask(req, res, next) {
+  try {
+    const { title, description, priority, tags } = req.body;
+    const task = await Task.findOneAndUpdate(
+      { _id: req.params.id, userId: req.user._id },
+      { title, description, priority, tags },
+      { new: true, runValidators: true },
+    );
+
+    if (!task) {
+      return res.status(404).json({
+        error: { code: "TASK_NOT_FOUND", message: "Task was not found." },
+      });
+    }
+
+    return res.json(task);
+  } catch (error) {
+    return next(error);
+  }
+}
+
+// Permanently removes one task by its database ID.
+export async function deleteTask(req, res, next) {
+  try {
+    const task = await Task.findOneAndDelete({ _id: req.params.id, userId: req.user._id });
+    if (!task) {
+      return res.status(404).json({
+        error: { code: "TASK_NOT_FOUND", message: "Task was not found." },
+      });
+    }
+
+    return res.json({ message: "Task deleted." });
+  } catch (error) {
+    return next(error);
+  }
+}
+
 // Reads the requested neighbors and rejects IDs that no longer belong to the destination column.
-async function findMoveNeighbors(prevId, nextId, columnId) {
+async function findMoveNeighbors(prevId, nextId, columnId, userId) {
   const neighborIds = [];
   if (prevId) neighborIds.push(prevId);
   if (nextId) neighborIds.push(nextId);
@@ -14,6 +84,7 @@ async function findMoveNeighbors(prevId, nextId, columnId) {
   const neighbors = await Task.find({
     _id: { $in: neighborIds },
     columnId,
+    userId,
   }).select("_id orderIndex").lean();
 
   if (neighbors.length !== neighborIds.length) return null;
@@ -44,9 +115,10 @@ function calculateOrderIndex(previousTask, nextTask) {
 }
 
 // Renumbers destination cards with a single write so later insertions have room for a midpoint.
-async function renumberDestinationColumn(columnId, movingTaskId) {
+async function renumberDestinationColumn(columnId, movingTaskId, userId) {
   const columnTasks = await Task.find({
     columnId,
+    userId,
     _id: { $ne: movingTaskId },
   }).sort({ orderIndex: 1, _id: 1 }).select("_id").lean();
 
@@ -90,7 +162,7 @@ export async function moveTask(req, res, next) {
       });
     }
 
-    const currentTask = await Task.findById(taskId).lean();
+    const currentTask = await Task.findOne({ _id: taskId, userId: req.user._id }).lean();
     if (!currentTask) {
       return res.status(404).json({
         error: { code: "TASK_NOT_FOUND", message: "Task was not found." },
@@ -102,13 +174,14 @@ export async function moveTask(req, res, next) {
       return sendConflict(res, "Task changed before this move.", currentTask);
     }
 
-    let neighbors = await findMoveNeighbors(prevId, nextId, columnId);
+    let neighbors = await findMoveNeighbors(prevId, nextId, columnId, req.user._id);
     if (!neighbors) {
       return sendConflict(res, "A destination neighbor changed before this move.", currentTask);
     }
 
     const otherDestinationTasks = await Task.countDocuments({
       columnId,
+      userId: req.user._id,
       _id: { $nin: [taskId, prevId, nextId].filter(Boolean) },
     });
     if (!neighbors.previousTask && !neighbors.nextTask && otherDestinationTasks > 0) {
@@ -119,8 +192,8 @@ export async function moveTask(req, res, next) {
     if (neighbors.previousTask && neighbors.nextTask) {
       const gap = neighbors.nextTask.orderIndex - neighbors.previousTask.orderIndex;
       if (gap < MIN_GAP) {
-        await renumberDestinationColumn(columnId, taskId);
-        neighbors = await findMoveNeighbors(prevId, nextId, columnId);
+        await renumberDestinationColumn(columnId, taskId, req.user._id);
+        neighbors = await findMoveNeighbors(prevId, nextId, columnId, req.user._id);
         if (!neighbors) {
           return sendConflict(res, "A destination neighbor changed before this move.", currentTask);
         }
@@ -135,7 +208,7 @@ export async function moveTask(req, res, next) {
 
     // The version filter and increment make competing moves on this card mutually exclusive.
     const updatedTask = await Task.findOneAndUpdate(
-      { _id: taskId, version },
+      { _id: taskId, userId: req.user._id, version },
       {
         $set: { columnId, orderIndex },
         $inc: { version: 1 },
@@ -144,7 +217,7 @@ export async function moveTask(req, res, next) {
     );
 
     if (!updatedTask) {
-      const latestTask = await Task.findById(taskId).lean();
+      const latestTask = await Task.findOne({ _id: taskId, userId: req.user._id }).lean();
       return sendConflict(res, "Task changed before this move.", latestTask);
     }
 

@@ -7,6 +7,13 @@ import mongoose from "mongoose";
 // Mongoose will reject documents that break these rules before they hit the DB.
 const taskSchema = new mongoose.Schema(
   {
+    // Every card belongs to one account and is never returned to another account.
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      index: true,
+    },
+
     // The card title – required so an empty card can never be saved
     title: {
       type: String,
@@ -69,4 +76,3 @@ const taskSchema = new mongoose.Schema(
 );
 
 export const Task = mongoose.model("Task", taskSchema);
-

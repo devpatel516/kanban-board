@@ -5,6 +5,22 @@ import { API_BASE_URL } from "../constants.js";
 
 // This module value lets the Header change request headers without adding another state system.
 export let simulateApiFailure = false;
+let authToken = localStorage.getItem("kanban-token") || "";
+
+// Saves the current login token so every task request is tied to one account.
+export function setAuthToken(token) {
+  authToken = token || "";
+  if (authToken) {
+    localStorage.setItem("kanban-token", authToken);
+  } else {
+    localStorage.removeItem("kanban-token");
+  }
+}
+
+// Reads the saved token while the app checks whether the user is still signed in.
+export function getSavedAuthToken() {
+  return authToken;
+}
 
 // Changes whether every API request asks the server to simulate a failure.
 export function setSimulateApiFailure(isEnabled) {
@@ -18,6 +34,9 @@ async function sendRequest(path, options = {}) {
     "Content-Type": "application/json",
     ...options.headers,
   };
+  if (authToken) {
+    headers.Authorization = "Bearer " + authToken;
+  }
   if (simulateApiFailure) {
     headers["x-simulate-failure"] = "true";
   }
@@ -31,10 +50,33 @@ async function sendRequest(path, options = {}) {
   if (!response.ok) {
     const data = await response.json().catch(() => ({}));
     const message = data?.error?.message || `Request failed (${response.status})`;
-    throw new Error(message);
+    const error = new Error(message);
+    error.status = response.status;
+    throw error;
   }
 
   return response.json();
+}
+
+// Creates a new account and starts a signed-in session.
+export async function signUp(body) {
+  return sendRequest("/api/auth/signup", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
+
+// Signs in an existing account.
+export async function logIn(body) {
+  return sendRequest("/api/auth/login", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
+
+// Checks whether the saved token still belongs to a valid account.
+export async function getCurrentUser() {
+  return sendRequest("/api/auth/me");
 }
 
 // Returns all tasks sorted by columnId then orderIndex.

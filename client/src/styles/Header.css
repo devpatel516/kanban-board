@@ -67,6 +67,28 @@
   cursor: pointer;
 }
 
+.header-account {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  color: var(--color-text-primary);
+  font-size: 0.85rem;
+}
+
+.header-logout {
+  padding: 6px 10px;
+  color: var(--color-text-primary);
+  background: var(--color-card-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font: inherit;
+  cursor: pointer;
+}
+
+.header-logout:hover {
+  background: var(--color-card-hover);
+}
+
 .theme-toggle:hover {
   background-color: var(--color-card-hover);
 }
@@ -99,5 +121,9 @@
 
   .theme-toggle {
     margin-left: auto;
+  }
+
+  .header-user-name {
+    display: none;
   }
 }

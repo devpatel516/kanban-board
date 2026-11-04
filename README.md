@@ -11,6 +11,8 @@ A simple drag-and-drop Kanban board built with the MERN stack
 - Create, edit, and delete task cards
 - Drag cards between columns or reorder them within a column
 - Priority badges (Low / Medium / High) and free-form tags
+- Sign up and sign in with a private board for each account
+- Passwords are saved as secure hashes; login sessions expire after seven days
 - Toast notifications for every action
 
 ---
@@ -59,6 +61,8 @@ npm install --prefix client   # installs React, dnd-kit, etc.
 cp server/.env.example server/.env
 ```
 Open `server/.env` and set `MONGODB_URI` to your MongoDB connection string.
+Generate a signing key with `node -e "console.log(require('node:crypto').randomBytes(48).toString('base64'))"`,
+then replace the `AUTH_SECRET` example value with it. Keep the key private.
 
 **Client** – copy the example (the default value works for local development):
 ```bash
@@ -98,6 +102,7 @@ npm run dev --prefix client   # UI  at http://localhost:5173
 | `MONGODB_URI`   | `mongodb://localhost:27017/kanban`     | Where MongoDB is running                      |
 | `PORT`          | `5000`                                 | Port the Express server listens on            |
 | `CLIENT_ORIGIN` | `http://localhost:5173`                | Allowed CORS origin (must match the React URL)|
+| `AUTH_SECRET`   | At least 32 random characters          | Private signing key for login sessions       |
 
 ### client/.env
 
@@ -111,6 +116,17 @@ npm run dev --prefix client   # UI  at http://localhost:5173
 
 Once the server is running, open http://localhost:5000/api/health in your browser.
 You should see: `{ "status": "ok", "timestamp": "..." }`.
+
+## Accounts and private boards
+
+Create an account from the app's welcome screen, or switch to **Sign in** if you
+already registered. Every task is tied to the account that created it; signing
+out and signing in with another account shows that account's separate board.
+Existing sample cards without an owner are assigned to the first account that
+signs up. The signup form requires a password with at least eight characters.
+
+The API provides `POST /api/auth/signup`, `POST /api/auth/login`, and
+`GET /api/auth/me`. Task endpoints require the session token returned by login.
 
 ---
 

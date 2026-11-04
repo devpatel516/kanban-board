@@ -4,6 +4,7 @@
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import { connectDatabase } from "./db.js";
+import { User } from "./models/User.js";
 
 dotenv.config();
 
@@ -53,13 +54,17 @@ async function seed() {
 
   // We import the model here (after DB connects) to avoid circular-import timing issues
   const { Task } = await import("./models/Task.js");
+  const firstUser = await User.findOne().sort({ createdAt: 1, _id: 1 }).select("_id");
 
   // Remove everything so we always start from a known state
   await Task.deleteMany({});
   console.log("Cleared existing tasks");
 
   // Insert the sample tasks all at once
-  await Task.insertMany(sampleTasks);
+  const tasksForInsert = firstUser
+    ? sampleTasks.map((task) => ({ ...task, userId: firstUser._id }))
+    : sampleTasks;
+  await Task.insertMany(tasksForInsert);
   console.log(`Seeded ${sampleTasks.length} tasks`);
 
   // Close the connection – the script should exit cleanly
@@ -68,4 +73,3 @@ async function seed() {
 }
 
 seed();
-

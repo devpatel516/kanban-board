@@ -1,5 +1,5 @@
-// What this file does: renders the sticky top header with the app name and logo.
-// When to edit: add a nav link, change the failure-test toggle, or change the app title.
+// What this file does: renders the app header, signed-in user, and theme controls.
+// When to edit: change the user greeting, failure-test toggle, or app title.
 
 import { useState } from "react";
 import {
@@ -9,7 +9,7 @@ import {
 import "../styles/Header.css";
 
 // Shows the app name and lets developers add the test header to API requests.
-function Header() {
+function Header({ user, onLogOut }) {
   const [theme, setTheme] = useState(document.documentElement.dataset.theme || "light");
   const nextThemeLabel = theme === "light" ? "dark" : "light";
   const themeButtonLabel = theme === "light" ? "🌙 Dark" : "☀️ Light";
@@ -46,6 +46,12 @@ function Header() {
         />
         <span>Simulate API failure</span>
       </label>
+      <div className="header-account">
+        <span className="header-user-name">{user.name}</span>
+        <button type="button" className="header-logout" onClick={onLogOut}>
+          Sign out
+        </button>
+      </div>
       <button
         type="button"
         className="theme-toggle"
