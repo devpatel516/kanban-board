@@ -69,6 +69,11 @@
   flex: 1;
 }
 
+.column-tasks-list--drop-target {
+  background-color: var(--color-surface-hover);
+  border-radius: var(--radius-md);
+}
+
 .column-empty-state {
   text-align: center;
   padding: var(--space-xl) var(--space-md);
@@ -78,4 +83,3 @@
   border-radius: var(--radius-md);
   margin: var(--space-xs) 0;
 }
-

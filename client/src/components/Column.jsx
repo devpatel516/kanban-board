@@ -4,7 +4,18 @@
 import TaskCard from "./TaskCard.jsx";
 import "../styles/Column.css";
 
-function Column({ column, tasks = [], onAddTask, onEditTask, onDeleteTask, onMoveTask, allTasks = [] }) {
+function Column({
+  column,
+  tasks = [],
+  onAddTask,
+  onEditTask,
+  onDeleteTask,
+  onMoveTask,
+  allTasks = [],
+  renderTask,
+  taskListRef,
+  isDropTarget,
+}) {
   // Move task up by one slot within this column
   // Worked example: tasks = [A(1000), B(2000), C(3000)]. Moving C(index 2) up:
   // targetIndex = 1 -> prev=A(1000), next=B(2000) -> new orderIndex = 1500.
@@ -75,23 +86,49 @@ function Column({ column, tasks = [], onAddTask, onEditTask, onDeleteTask, onMov
         </button>
       </header>
 
-      <div className="column-tasks-list">
+      <div
+        ref={taskListRef}
+        className={`column-tasks-list${isDropTarget ? " column-tasks-list--drop-target" : ""}`}
+      >
         {tasks.length === 0 ? (
           <div className="column-empty-state">No tasks yet</div>
         ) : (
-          tasks.map((task, index) => (
-            <TaskCard
-              key={task._id}
-              task={task}
-              onEdit={onEditTask}
-              onDelete={onDeleteTask}
-              onMoveToColumn={handleMoveToColumn}
-              onMoveUp={() => handleMoveUp(task, index)}
-              onMoveDown={() => handleMoveDown(task, index)}
-              isFirst={index === 0}
-              isLast={index === tasks.length - 1}
-            />
-          ))
+          /* Keep the same Move menu actions available whether cards are sortable or not. */
+          tasks.map((task, index) => {
+            // Moves this card to another column using the existing fallback menu.
+            function moveToColumn(targetColumnId) {
+              handleMoveToColumn(task, targetColumnId);
+            }
+
+            // Moves this card up one position using the existing fallback menu.
+            function moveUp() {
+              handleMoveUp(task, index);
+            }
+
+            // Moves this card down one position using the existing fallback menu.
+            function moveDown() {
+              handleMoveDown(task, index);
+            }
+
+            const taskActions = {
+              onMoveToColumn: moveToColumn,
+              onMoveUp: moveUp,
+              onMoveDown: moveDown,
+              isFirst: index === 0,
+              isLast: index === tasks.length - 1,
+            };
+
+            if (renderTask) return renderTask(task, taskActions);
+            return (
+              <TaskCard
+                key={task._id}
+                task={task}
+                onEdit={onEditTask}
+                onDelete={onDeleteTask}
+                {...taskActions}
+              />
+            );
+          })
         )}
       </div>
     </section>
@@ -99,4 +136,3 @@ function Column({ column, tasks = [], onAddTask, onEditTask, onDeleteTask, onMov
 }
 
 export default Column;
-

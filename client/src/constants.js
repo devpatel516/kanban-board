@@ -9,6 +9,12 @@ export const COLUMNS = [
   { id: "done",        label: "Done"        },
 ];
 
+// Drop-target IDs stay distinct from task IDs.
+export const COLUMN_DROP_ID_PREFIX = "column-";
+
+// A short pointer movement prevents accidental drags while scrolling on touch screens.
+export const DRAG_ACTIVATION_DISTANCE = 8;
+
 // Priority levels that the form <select> displays.
 // Order here = order in the dropdown.
 export const PRIORITIES = ["Low", "Medium", "High"];
