@@ -7,6 +7,7 @@
   border-bottom: 1px solid var(--color-border);
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 0 var(--space-lg);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
   /* keeps the header above the board content when scrolling */
@@ -43,3 +44,37 @@
   margin-left: var(--space-xs);
 }
 
+.failure-simulation-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.failure-simulation-toggle input {
+  accent-color: var(--color-primary);
+}
+
+@media (max-width: 520px) {
+  .app-header {
+    height: auto;
+    min-height: var(--header-height);
+    padding: var(--space-sm) var(--space-md);
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+  }
+
+  .header-brand {
+    gap: var(--space-xs);
+  }
+
+  .header-title {
+    font-size: 1.1rem;
+  }
+
+  .failure-simulation-toggle {
+    white-space: nowrap;
+  }
+}
