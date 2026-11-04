@@ -15,6 +15,9 @@ export const COLUMN_DROP_ID_PREFIX = "column-";
 // A short pointer movement prevents accidental drags while scrolling on touch screens.
 export const DRAG_ACTIVATION_DISTANCE = 8;
 
+// Fractional-order spacing used when a new card is appended to a column.
+export const ORDER_GAP = 1000;
+
 // Priority levels that the form <select> displays.
 // Order here = order in the dropdown.
 export const PRIORITIES = ["Low", "Medium", "High"];
