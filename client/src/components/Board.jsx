@@ -2,7 +2,7 @@
 // When to edit: add board-level filters, search bar, or bulk actions.
 
 import { useState } from "react";
-import Column from "./Column.jsx";
+import DragDropBoard from "./DragDropBoard.jsx";
 import TaskModal from "./TaskModal.jsx";
 import ConfirmDialog from "./ConfirmDialog.jsx";
 import { useBoard } from "../hooks/useBoard.js";
@@ -89,25 +89,14 @@ function Board() {
   // ── 3. Normal Board View ───────────────────────────────────────────────────
   return (
     <main className="board-container">
-      <div className="board-columns-grid">
-        {COLUMNS.map((column) => {
-          // Filter tasks belonging to this column, already sorted by orderIndex
-          const columnTasks = tasks.filter((t) => t.columnId === column.id);
-
-          return (
-            <Column
-              key={column.id}
-              column={column}
-              tasks={columnTasks}
-              allTasks={tasks}
-              onAddTask={handleOpenCreateModal}
-              onEditTask={handleOpenEditModal}
-              onDeleteTask={(task) => setTaskToDelete(task)}
-              onMoveTask={moveTask}
-            />
-          );
-        })}
-      </div>
+      <DragDropBoard
+        columns={COLUMNS}
+        tasks={tasks}
+        onAddTask={handleOpenCreateModal}
+        onEditTask={handleOpenEditModal}
+        onDeleteTask={(task) => setTaskToDelete(task)}
+        onMoveTask={moveTask}
+      />
 
       {/* Create / Edit Modal Dialog */}
       <TaskModal
@@ -135,4 +124,3 @@ function Board() {
 }
 
 export default Board;
-

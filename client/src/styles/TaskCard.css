@@ -25,6 +25,37 @@
   gap: var(--space-sm);
 }
 
+.task-card-title-group {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-xs);
+  min-width: 0;
+}
+
+.task-card-drag-handle {
+  border: 0;
+  padding: 0 2px;
+  background: none;
+  color: var(--color-text-light);
+  cursor: grab;
+  touch-action: none;
+  font-size: 1.1rem;
+  line-height: 1.2;
+}
+
+.task-card-drag-handle:active {
+  cursor: grabbing;
+}
+
+.sortable-task-card {
+  position: relative;
+}
+
+.task-card-drag-overlay {
+  box-shadow: var(--shadow-card-hover);
+  transform: rotate(1deg);
+}
+
 .task-card-title {
   font-size: 0.95rem;
   font-weight: 600;
@@ -143,4 +174,3 @@
   background-color: var(--color-border);
   margin: 3px 0;
 }
-

@@ -6,7 +6,18 @@ import PriorityBadge from "./PriorityBadge.jsx";
 import { COLUMNS } from "../constants.js";
 import "../styles/TaskCard.css";
 
-function TaskCard({ task, onEdit, onDelete, onMoveToColumn, onMoveUp, onMoveDown, isFirst, isLast }) {
+function TaskCard({
+  task,
+  onEdit,
+  onDelete,
+  onMoveToColumn,
+  onMoveUp,
+  onMoveDown,
+  isFirst,
+  isLast,
+  dragAttributes,
+  dragListeners,
+}) {
   // Local state to toggle the dropdown move menu
   const [showMoveMenu, setShowMoveMenu] = useState(false);
 
@@ -16,7 +27,18 @@ function TaskCard({ task, onEdit, onDelete, onMoveToColumn, onMoveUp, onMoveDown
   return (
     <article className="task-card" aria-label={`Task: ${task.title}`}>
       <div className="task-card-header">
-        <h3 className="task-card-title">{task.title}</h3>
+        <div className="task-card-title-group">
+          <button
+            type="button"
+            className="task-card-drag-handle"
+            aria-label={`Drag task: ${task.title}`}
+            {...dragAttributes}
+            {...dragListeners}
+          >
+            ⠿
+          </button>
+          <h3 className="task-card-title">{task.title}</h3>
+        </div>
         <PriorityBadge priority={task.priority} />
       </div>
 
@@ -104,4 +126,3 @@ function TaskCard({ task, onEdit, onDelete, onMoveToColumn, onMoveUp, onMoveDown
 }
 
 export default TaskCard;
-
