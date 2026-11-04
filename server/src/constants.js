@@ -14,3 +14,5 @@ export const PRIORITIES = ["Low", "Medium", "High"];
 // Example: last card has orderIndex 3000 -> new card gets 4000.
 export const ORDER_GAP = 1000;
 
+// Renumber a column when fractional ordering leaves less than this space between cards.
+export const MIN_GAP = 0.000001;

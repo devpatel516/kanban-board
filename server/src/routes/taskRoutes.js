@@ -1,5 +1,12 @@
-// What this file does: placeholder for task routes (added in Task 2).
-// When to edit: mount this router in index.js and fill in the routes.
+// What this file does: connects task URLs to their controller functions.
+// When to edit: add an endpoint or change its URL.
 
-// Routes will be added in the next task.
+import { Router } from "express";
+import { moveTask } from "../controllers/taskController.js";
 
+const taskRoutes = Router();
+
+// Applies a task move through the version-checked controller.
+taskRoutes.patch("/:id/move", moveTask);
+
+export default taskRoutes;
