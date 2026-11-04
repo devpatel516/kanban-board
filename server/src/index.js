@@ -5,6 +5,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { connectDatabase } from "./db.js";
+import taskRoutes from "./routes/taskRoutes.js";
 
 // Load variables from .env into process.env BEFORE anything else reads them
 dotenv.config();
@@ -16,6 +17,7 @@ app.use(cors({ origin: process.env.CLIENT_ORIGIN }));
 
 // Parse incoming JSON request bodies so req.body works in controllers
 app.use(express.json());
+app.use("/api/tasks", taskRoutes);
 
 // ── Health route ─────────────────────────────────────────────────────────────
 // A quick endpoint to confirm the server is running.
@@ -38,4 +40,3 @@ async function startServer() {
 }
 
 startServer();
-
