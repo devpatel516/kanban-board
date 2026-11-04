@@ -5,6 +5,14 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import PriorityBadge from "./PriorityBadge.jsx";
 import { COLUMNS } from "../constants.js";
+import {
+  ArrowRightIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+  KebabIcon,
+  PencilIcon,
+  TrashIcon,
+} from "./Icons.jsx";
 import "../styles/TaskCard.css";
 
 // Shows task actions and keeps the move menu visible outside the scrollable column.
@@ -20,7 +28,7 @@ function TaskCard({
   dragAttributes,
   dragListeners,
 }) {
-  // Local state to toggle the dropdown move menu
+  // Local state controls the card action menu without changing task behavior.
   const [showMoveMenu, setShowMoveMenu] = useState(false);
   const [menuPosition, setMenuPosition] = useState(null);
   const moveButtonRef = useRef(null);
@@ -37,13 +45,13 @@ function TaskCard({
     }
 
     const buttonBounds = moveButtonRef.current.getBoundingClientRect();
-    const menuHeight = 168;
+    const menuHeight = 240;
     let top = buttonBounds.top - menuHeight - 8;
     if (top < 8) top = buttonBounds.bottom + 8;
     if (top + menuHeight > window.innerHeight - 8) {
       top = window.innerHeight - menuHeight - 8;
     }
-    const left = Math.min(buttonBounds.left, window.innerWidth - 176 - 8);
+    const left = Math.min(buttonBounds.left, window.innerWidth - 192 - 8);
     setMenuPosition({ top, left: Math.max(8, left) });
     setShowMoveMenu(true);
   }
@@ -82,7 +90,7 @@ function TaskCard({
         <div className="task-card-title-group">
           <button
             type="button"
-            className="task-card-drag-handle"
+            className="btn-invisible task-card-drag-handle"
             aria-label={`Drag task: ${task.title}`}
             {...dragAttributes}
             {...dragListeners}
@@ -112,13 +120,13 @@ function TaskCard({
           <button
             ref={moveButtonRef}
             type="button"
-            className="icon-button"
-            title="Move task"
-            aria-label="Move task menu"
+            className="btn-invisible card-menu-button"
+            title="Card actions"
+            aria-label="Card actions"
             aria-expanded={showMoveMenu}
             onClick={handleMoveMenuToggle}
           >
-            ⇅ Move
+            <KebabIcon />
           </button>
 
           {showMoveMenu && menuPosition && createPortal(
@@ -134,7 +142,8 @@ function TaskCard({
                 disabled={isFirst}
                 onClick={() => { setShowMoveMenu(false); onMoveUp(task); }}
               >
-                ▲ Move Up
+                <ChevronUpIcon />
+                <span>Move up</span>
               </button>
               <button
                 type="button"
@@ -142,7 +151,8 @@ function TaskCard({
                 disabled={isLast}
                 onClick={() => { setShowMoveMenu(false); onMoveDown(task); }}
               >
-                ▼ Move Down
+                <ChevronDownIcon />
+                <span>Move down</span>
               </button>
               <div className="move-menu-divider" />
               {otherColumns.map((col) => (
@@ -152,34 +162,32 @@ function TaskCard({
                   className="move-menu-item"
                   onClick={() => { setShowMoveMenu(false); onMoveToColumn(task, col.id); }}
                 >
-                  → {col.label}
+                  <ArrowRightIcon />
+                  <span>Move to {col.label}</span>
                 </button>
               ))}
+              <div className="move-menu-divider" />
+              <button
+                type="button"
+                className="move-menu-item"
+                onClick={() => { setShowMoveMenu(false); onEdit(task); }}
+              >
+                <PencilIcon />
+                <span>Edit</span>
+              </button>
+              <button
+                type="button"
+                className="move-menu-item move-menu-item-danger"
+                onClick={() => { setShowMoveMenu(false); onDelete(task); }}
+              >
+                <TrashIcon />
+                <span>Delete</span>
+              </button>
             </div>,
             document.body,
           )}
         </div>
 
-        <div className="task-card-actions">
-          <button
-            type="button"
-            className="icon-button"
-            title="Edit task"
-            aria-label="Edit task"
-            onClick={() => onEdit(task)}
-          >
-            ✏️
-          </button>
-          <button
-            type="button"
-            className="icon-button icon-button-danger"
-            title="Delete task"
-            aria-label="Delete task"
-            onClick={() => onDelete(task)}
-          >
-            🗑️
-          </button>
-        </div>
       </footer>
     </article>
   );

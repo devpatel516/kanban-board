@@ -1,7 +1,7 @@
 {
-  "name": "petpooja-kanban",
+  "name": "kanban-board",
   "version": "1.0.0",
-  "description": "MERN Kanban board – monorepo root",
+  "description": "MERN Kanban board monorepo",
   "private": true,
   "scripts": {
     "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
@@ -11,4 +11,3 @@
     "concurrently": "^8.2.2"
   }
 }
-

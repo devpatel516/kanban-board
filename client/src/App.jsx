@@ -1,18 +1,29 @@
-// What this file does: checks login state and renders the shared app shell or login screen.
-// When to edit: change the signed-in flow or add app-wide UI.
+// What this file does: restores the account, configures toast messages, and selects each route.
+// When to edit: add a top-level page or change global login and notification behavior.
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
-import Header from "./components/Header.jsx";
-import Board from "./components/Board.jsx";
+import { getCurrentUser, getSavedAuthToken, setAuthToken, setSimulateApiFailure } from "./api/taskApi.js";
 import AuthScreen from "./components/AuthScreen.jsx";
-import { getCurrentUser, getSavedAuthToken, setAuthToken } from "./api/taskApi.js";
+import BoardPage from "./components/BoardPage.jsx";
+import LandingPage from "./components/LandingPage.jsx";
 
 // Keeps each board hidden until the saved account has been checked.
 function App() {
   const [user, setUser] = useState(null);
   const [loginError, setLoginError] = useState("");
   const [isCheckingLogin, setIsCheckingLogin] = useState(Boolean(getSavedAuthToken()));
+  const location = useLocation();
+  const isDebugMode = new URLSearchParams(location.search).get("debug") === "1";
+  const initialAuthMode = new URLSearchParams(location.search).get("mode") === "login"
+    ? "login"
+    : "signup";
+
+  // Disable failure simulation as soon as the URL leaves explicit debug mode.
+  useLayoutEffect(() => {
+    if (!isDebugMode) setSimulateApiFailure(false);
+  }, [isDebugMode]);
 
   // Verify a saved login before showing the user's private board.
   useEffect(() => {
@@ -36,33 +47,39 @@ function App() {
 
   // Clears the saved token before unmounting the user's private board.
   function handleLogOut() {
+    setSimulateApiFailure(false);
     setAuthToken("");
     setUser(null);
   }
 
-  // Keeps the app from briefly showing the login form during a session check.
+  // Keeps the app from briefly showing a page during the saved-session check.
   if (isCheckingLogin) {
-    return <main className="auth-loading">Checking your account…</main>;
+    return <main className="auth-loading">Checking your account...</main>;
   }
 
   return (
     <div className="app">
-      {/* Toast notification container mounted globally */}
       <Toaster
         position="top-right"
         toastOptions={{
           style: {
             background: "var(--color-toast-background)",
             color: "var(--color-toast-text)",
-            border: "1px solid var(--color-border)",
+            border: "var(--border-width) solid var(--color-border)",
+            borderRadius: "var(--radius-small)",
+            boxShadow: "var(--shadow-toast)",
+            fontFamily: "var(--font-body)",
+            fontSize: "14px",
           },
           success: {
+            style: { borderLeft: "4px solid var(--color-success)" },
             iconTheme: {
               primary: "var(--color-toast-success)",
               secondary: "var(--color-toast-background)",
             },
           },
           error: {
+            style: { borderLeft: "4px solid var(--color-danger)" },
             iconTheme: {
               primary: "var(--color-toast-error)",
               secondary: "var(--color-toast-background)",
@@ -70,17 +87,22 @@ function App() {
           },
         }}
       />
-
-      {user ? (
-        <>
-          <Header user={user} onLogOut={handleLogOut} />
-          <div className="app-main">
-            <Board key={user.id} />
-          </div>
-        </>
-      ) : (
-        <AuthScreen initialErrorMessage={loginError} onAuthenticated={setUser} />
-      )}
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route
+          path="/board"
+          element={user ? (
+            <BoardPage user={user} onLogOut={handleLogOut} />
+          ) : (
+            <AuthScreen
+              initialErrorMessage={loginError}
+              initialMode={initialAuthMode}
+              onAuthenticated={setUser}
+            />
+          )}
+        />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
     </div>
   );
 }

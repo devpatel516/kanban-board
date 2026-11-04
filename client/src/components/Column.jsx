@@ -2,6 +2,7 @@
 // When to edit: customize column actions, change empty state message, or add column-level filters.
 
 import TaskCard from "./TaskCard.jsx";
+import { PlusIcon } from "./Icons.jsx";
 import "../styles/Column.css";
 
 function Column({
@@ -78,11 +79,12 @@ function Column({
 
         <button
           type="button"
-          className="btn btn-secondary"
+          className="btn-invisible column-add-button"
           onClick={() => onAddTask(column.id)}
           aria-label={`Add task to ${column.label}`}
         >
-          + Add
+          <PlusIcon />
+          <span>Add</span>
         </button>
       </header>
 

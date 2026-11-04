@@ -3,11 +3,12 @@
 
 import { useState } from "react";
 import { logIn, setAuthToken, signUp } from "../api/taskApi.js";
+import { BoardIcon } from "./Icons.jsx";
 import "../styles/AuthScreen.css";
 
 // Shows a friendly login/signup screen and starts a session when the server accepts it.
-function AuthScreen({ onAuthenticated, initialErrorMessage }) {
-  const [isSigningUp, setIsSigningUp] = useState(true);
+function AuthScreen({ onAuthenticated, initialErrorMessage, initialMode = "signup" }) {
+  const [isSigningUp, setIsSigningUp] = useState(initialMode !== "login");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -42,8 +43,8 @@ function AuthScreen({ onAuthenticated, initialErrorMessage }) {
     <main className="auth-page">
       <section className="auth-card" aria-labelledby="auth-title">
         <div className="auth-brand">
-          <span className="auth-logo" aria-hidden="true">🐾</span>
-          <span>PetPooja</span>
+          <span className="auth-logo"><BoardIcon /></span>
+          <span>Kanban Board</span>
         </div>
         <p className="auth-eyebrow">YOUR SPACE TO GET THINGS DONE</p>
         <h1 id="auth-title">{isSigningUp ? "Create your account" : "Welcome back"}</h1>
@@ -92,13 +93,13 @@ function AuthScreen({ onAuthenticated, initialErrorMessage }) {
             />
           </label>
           {errorMessage && <p className="auth-error" role="alert">{errorMessage}</p>}
-          <button className="auth-submit" disabled={isSaving} type="submit">
+          <button className="btn btn-primary auth-submit" disabled={isSaving} type="submit">
             {isSaving ? "Please wait…" : isSigningUp ? "Create account" : "Sign in"}
           </button>
         </form>
 
         <p className="auth-switch">
-          {isSigningUp ? "Already have an account?" : "New to PetPooja?"}
+          {isSigningUp ? "Already have an account?" : "New to Kanban Board?"}
           <button onClick={handleModeToggle} type="button">
             {isSigningUp ? "Sign in" : "Create an account"}
           </button>
@@ -106,7 +107,7 @@ function AuthScreen({ onAuthenticated, initialErrorMessage }) {
         <p className="auth-privacy-note">Your board is private to your account.</p>
       </section>
       <aside className="auth-side-note">
-        <span className="auth-side-icon" aria-hidden="true">✦</span>
+        <span className="auth-side-icon"><BoardIcon /></span>
         <p>Make room for the work that matters.</p>
         <span>Plan it. Move it forward. Celebrate getting it done.</span>
       </aside>

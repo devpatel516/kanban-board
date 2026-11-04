@@ -1,4 +1,4 @@
-# 🐾 PetPooja Kanban Board
+# Kanban Board
 
 A simple drag-and-drop Kanban board built with the MERN stack
 (MongoDB, Express, React, Node.js).
@@ -14,13 +14,14 @@ A simple drag-and-drop Kanban board built with the MERN stack
 - Sign up and sign in with a private board for each account
 - Passwords are saved as secure hashes; login sessions expire after seven days
 - Toast notifications for every action
+- A public landing page at `/` and a private board at `/board`
 
 ---
 
 ## Project structure
 
 ```
-PetPooja/
+kanban-board/
 ├── client/          React front-end (Vite)
 ├── server/          Express + Mongoose API
 ├── package.json     Root scripts (runs both apps together)
@@ -124,6 +125,10 @@ already registered. Every task is tied to the account that created it; signing
 out and signing in with another account shows that account's separate board.
 Existing sample cards without an owner are assigned to the first account that
 signs up. The signup form requires a password with at least eight characters.
+
+The public landing page is at `/`. The signed-in board and account screen are at
+`/board`. To show the rollback demonstration control, open `/board?debug=1`;
+the control is hidden on the normal board URL.
 
 The API provides `POST /api/auth/signup`, `POST /api/auth/login`, and
 `GET /api/auth/me`. Task endpoints require the session token returned by login.

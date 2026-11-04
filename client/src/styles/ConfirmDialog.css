@@ -1,37 +1,46 @@
-/* What this file does: styles the deletion confirmation dialog.
-   When to edit: adjust dialog sizing, button layout, or warning text styling. */
+/* What this file does: styles the confirmation dialog for deleting a task.
+   When to edit: adjust the warning content, dialog shape, or action layout. */
 
 .confirm-dialog {
-  background-color: var(--color-modal-background);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-modal);
   width: 100%;
-  max-width: 400px;
-  padding: var(--space-lg);
+  max-width: 480px;
+  overflow: hidden;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-modal-background);
+  box-shadow: var(--shadow-modal);
+  animation: modal-enter 140ms ease-out;
+}
+
+.confirm-header {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-md);
-  animation: modal-enter 0.15s ease-out;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px;
+  border-bottom: var(--border-width) solid var(--color-border);
 }
 
 .confirm-title {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--color-danger);
-  display: flex;
-  align-items: center;
-  gap: var(--space-xs);
+  color: var(--color-text-primary);
+  font-size: 19px;
+  font-weight: 600;
+}
+
+.confirm-body {
+  padding: 22px;
 }
 
 .confirm-message {
-  font-size: 0.9rem;
   color: var(--color-text-muted);
-  line-height: 1.45;
+  font-size: 15px;
+  line-height: var(--line-height-base);
 }
 
 .confirm-footer {
   display: flex;
   justify-content: flex-end;
-  gap: var(--space-sm);
-  padding-top: var(--space-xs);
+  gap: 10px;
+  padding: 16px 22px;
+  border-top: var(--border-width) solid var(--color-border);
+  background: var(--color-section-background);
 }

@@ -2,6 +2,7 @@
 // When to edit: customize warning copy or add another action confirmation.
 
 import { useEffect, useRef } from "react";
+import { XIcon } from "./Icons.jsx";
 import "../styles/ConfirmDialog.css";
 
 function ConfirmDialog({ isOpen, title = "Delete Task", message, onConfirm, onCancel }) {
@@ -37,17 +38,25 @@ function ConfirmDialog({ isOpen, title = "Delete Task", message, onConfirm, onCa
         aria-describedby="confirm-desc"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 id="confirm-title" className="confirm-title">
-          ⚠️ {title}
-        </h2>
-        <p id="confirm-desc" className="confirm-message">
-          {message}
-        </p>
+        <header className="confirm-header">
+          <h2 id="confirm-title" className="confirm-title">{title}</h2>
+          <button
+            type="button"
+            className="btn-invisible modal-close-button"
+            onClick={onCancel}
+            aria-label="Close dialog"
+          >
+            <XIcon />
+          </button>
+        </header>
+        <div className="confirm-body">
+          <p id="confirm-desc" className="confirm-message">{message}</p>
+        </div>
         <footer className="confirm-footer">
           <button
             ref={cancelButtonRef}
             type="button"
-            className="btn btn-secondary"
+            className="btn"
             onClick={onCancel}
           >
             Cancel
@@ -66,4 +75,3 @@ function ConfirmDialog({ isOpen, title = "Delete Task", message, onConfirm, onCa
 }
 
 export default ConfirmDialog;
-

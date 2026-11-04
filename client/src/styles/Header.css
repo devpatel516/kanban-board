@@ -1,129 +1,88 @@
-/* What this file does: styles the top header bar.
-   When to edit: change the logo, header height, or add navigation links. */
+/* What this file does: styles the shared frosted navigation and board account controls.
+   When to edit: change the nav height, glass effect, or signed-in account layout. */
 
-.app-header {
-  height: var(--header-height);
-  background-color: var(--color-surface);
-  border-bottom: 1px solid var(--color-border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 var(--space-lg);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-  /* keeps the header above the board content when scrolling */
+.site-nav {
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 20;
+  display: flex;
+  width: 100%;
+  min-height: var(--header-height);
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: 0 24px;
+  border-bottom: var(--border-width) solid var(--color-border);
+  background: var(--color-frosted-background);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+}
+
+.app-header {
+  min-height: 48px;
 }
 
 .header-brand {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: var(--space-sm);
+  gap: 10px;
+  color: var(--color-text-primary);
 }
 
-.header-logo {
-  font-size: 1.5rem;
-  line-height: 1;
+.header-brand:hover {
+  color: var(--color-text-primary);
 }
 
 .header-title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--color-text);
+  font-size: 15px;
+  font-weight: 600;
   letter-spacing: -0.02em;
-}
-
-.header-subtitle {
-  font-size: 0.75rem;
-  color: var(--color-text-muted);
-  background-color: var(--color-bg);
-  padding: 2px var(--space-xs);
-  border-radius: var(--radius-sm);
-  font-weight: 500;
-  margin-left: var(--space-xs);
-}
-
-.failure-simulation-toggle {
-  display: flex;
-  align-items: center;
-  gap: var(--space-xs);
-  color: var(--color-text-muted);
-  font-size: 0.8rem;
-  cursor: pointer;
-}
-
-.failure-simulation-toggle input {
-  accent-color: var(--color-primary);
-}
-
-.theme-toggle {
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: var(--space-xs) var(--space-sm);
-  background-color: var(--color-card-background);
-  color: var(--color-text-primary);
-  font: inherit;
-  cursor: pointer;
 }
 
 .header-account {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
-  color: var(--color-text-primary);
-  font-size: 0.85rem;
+  gap: 10px;
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+.header-user-name {
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.header-theme-toggle {
+  width: 34px;
+  height: 34px;
 }
 
 .header-logout {
-  padding: 6px 10px;
-  color: var(--color-text-primary);
-  background: var(--color-card-background);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  font: inherit;
-  cursor: pointer;
+  min-height: 34px;
+  padding: 7px 15px;
+  font-size: 13px;
 }
 
-.header-logout:hover {
-  background: var(--color-card-hover);
-}
-
-.theme-toggle:hover {
-  background-color: var(--color-card-hover);
-}
-
-.theme-toggle:focus-visible {
-  outline: 2px solid var(--color-focus-ring);
-  outline-offset: 2px;
-}
-
-@media (max-width: 520px) {
-  .app-header {
-    height: auto;
-    min-height: var(--header-height);
-    padding: var(--space-sm) var(--space-md);
-    flex-wrap: wrap;
-    gap: var(--space-sm);
+@media (max-width: 600px) {
+  .site-nav {
+    gap: 8px;
+    padding: 0 16px;
   }
 
-  .header-brand {
-    gap: var(--space-xs);
-  }
-
-  .header-title {
-    font-size: 1.1rem;
-  }
-
-  .failure-simulation-toggle {
-    white-space: nowrap;
-  }
-
-  .theme-toggle {
-    margin-left: auto;
+  .header-account {
+    gap: 4px;
   }
 
   .header-user-name {
-    display: none;
+    max-width: 96px;
+    font-size: 12px;
+  }
+
+  .header-logout {
+    min-height: 32px;
+    padding: 6px 10px;
+    font-size: 12px;
   }
 }

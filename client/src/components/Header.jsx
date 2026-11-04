@@ -1,23 +1,15 @@
-// What this file does: renders the app header, signed-in user, and theme controls.
-// When to edit: change the user greeting, failure-test toggle, or app title.
+// What this file does: shows the board navigation, current account, and theme control.
+// When to edit: change the board title, account actions, or navigation controls.
 
 import { useState } from "react";
-import {
-  setSimulateApiFailure,
-  simulateApiFailure,
-} from "../api/taskApi.js";
+import { Link } from "react-router-dom";
+import { BoardIcon, MoonIcon, SunIcon } from "./Icons.jsx";
 import "../styles/Header.css";
 
-// Shows the app name and lets developers add the test header to API requests.
+// Gives the private board a compact frosted navigation bar.
 function Header({ user, onLogOut }) {
   const [theme, setTheme] = useState(document.documentElement.dataset.theme || "light");
   const nextThemeLabel = theme === "light" ? "dark" : "light";
-  const themeButtonLabel = theme === "light" ? "🌙 Dark" : "☀️ Light";
-
-  // Updates the shared API flag so all future requests include the test header.
-  function handleFailureSimulationChange(event) {
-    setSimulateApiFailure(event.target.checked);
-  }
 
   // Changes the active palette and saves the choice for the next page load.
   function handleThemeToggle() {
@@ -32,36 +24,20 @@ function Header({ user, onLogOut }) {
   }
 
   return (
-    <header className="app-header">
-      <div className="header-brand">
-        <span className="header-logo" aria-hidden="true">🐾</span>
-        <h1 className="header-title">PetPooja</h1>
-        <span className="header-subtitle">Kanban Board</span>
-      </div>
-      <label className="failure-simulation-toggle">
-        <input
-          type="checkbox"
-          defaultChecked={simulateApiFailure}
-          onChange={handleFailureSimulationChange}
-        />
-        <span>Simulate API failure</span>
-      </label>
+    <header className="app-header site-nav">
+      <Link to="/" className="header-brand" aria-label="Kanban Board home">
+        <BoardIcon />
+        <span className="header-title">Kanban Board</span>
+      </Link>
       <div className="header-account">
         <span className="header-user-name">{user.name}</span>
-        <button type="button" className="header-logout" onClick={onLogOut}>
+        <button type="button" className="btn btn-icon header-theme-toggle" onClick={handleThemeToggle} aria-pressed={theme === "dark"} aria-label={`Switch to ${nextThemeLabel} theme`} title={`Switch to ${nextThemeLabel} theme`}>
+          {theme === "light" ? <MoonIcon /> : <SunIcon />}
+        </button>
+        <button type="button" className="btn header-logout" onClick={onLogOut}>
           Sign out
         </button>
       </div>
-      <button
-        type="button"
-        className="theme-toggle"
-        onClick={handleThemeToggle}
-        aria-pressed={theme === "dark"}
-        aria-label={`Switch to ${nextThemeLabel} theme`}
-        title={`Switch to ${nextThemeLabel} theme`}
-      >
-        {themeButtonLabel}
-      </button>
     </header>
   );
 }

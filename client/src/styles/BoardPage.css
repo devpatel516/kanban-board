@@ -1,0 +1,40 @@
+/* What this file does: styles the board page wrapper and evaluator-only debug footer.
+   When to edit: change the private board footer spacing or debug control appearance. */
+
+.board-page {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.board-footer {
+  display: flex;
+  min-height: 52px;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: 8px 32px;
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.debug-failure-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  color: var(--color-text-muted);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.debug-failure-toggle input {
+  width: 14px;
+  height: 14px;
+  accent-color: var(--color-accent);
+}
+
+@media (max-width: 600px) {
+  .board-footer {
+    padding: 8px 20px;
+  }
+}

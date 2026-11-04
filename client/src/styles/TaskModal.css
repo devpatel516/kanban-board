@@ -1,24 +1,25 @@
-/* What this file does: styles the create/edit task modal dialog.
-   When to edit: adjust modal size, input padding, or form field spacing. */
+/* What this file does: styles the create and edit task dialog.
+   When to edit: adjust dialog size, fields, or action spacing. */
 
 .modal-dialog {
-  background-color: var(--color-modal-background);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-modal);
   width: 100%;
-  max-width: 480px;
+  max-width: 520px;
   overflow: hidden;
-  animation: modal-enter 0.15s ease-out;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-modal-background);
+  box-shadow: var(--shadow-modal);
+  animation: modal-enter 140ms ease-out;
 }
 
 @keyframes modal-enter {
   from {
     opacity: 0;
-    transform: scale(0.96);
+    transform: translateY(8px) scale(0.98);
   }
   to {
     opacity: 1;
-    transform: scale(1);
+    transform: translateY(0) scale(1);
   }
 }
 
@@ -26,59 +27,51 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-md) var(--space-lg);
-  border-bottom: 1px solid var(--color-border);
+  padding: 18px 22px;
+  border-bottom: var(--border-width) solid var(--color-border);
 }
 
 .modal-title {
-  font-size: 1.15rem;
+  color: var(--color-text-primary);
+  font-size: 19px;
   font-weight: 600;
-  color: var(--color-text);
 }
 
 .modal-close-button {
-  background: none;
-  border: none;
-  font-size: 1.25rem;
-  cursor: pointer;
-  color: var(--color-text-secondary);
-  border-radius: var(--radius-sm);
-  padding: 4px;
-}
-
-.modal-close-button:hover {
-  color: var(--color-text);
+  width: 34px;
+  height: 34px;
 }
 
 .modal-form {
-  padding: var(--space-lg);
   display: flex;
   flex-direction: column;
-  gap: var(--space-md);
+  gap: 18px;
+  padding: 22px;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs);
+  gap: 7px;
 }
 
 .form-label {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--color-text);
+  color: var(--color-text-primary);
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .form-input,
 .form-textarea,
 .form-select {
-  padding: var(--space-sm) var(--space-md);
-  border: 1px solid var(--color-input-border);
-  border-radius: var(--radius-md);
-  font-size: 0.9rem;
-  font-family: inherit;
+  min-height: 46px;
+  padding: 10px 14px;
+  border: var(--border-width) solid var(--color-input-border);
+  border-radius: var(--radius-small);
+  background: var(--color-input-background);
   color: var(--color-text-primary);
-  background-color: var(--color-input-background);
+  font-size: 15px;
+  font-family: var(--font-body);
 }
 
 .form-input::placeholder,
@@ -87,27 +80,44 @@
   opacity: 1;
 }
 
-.form-input:focus,
-.form-textarea:focus,
-.form-select:focus {
-  outline: none;
-  border-color: var(--color-focus-ring);
+option {
+  background: var(--color-input-background);
+  color: var(--color-text-primary);
+}
+
+.form-input:focus-visible,
+.form-textarea:focus-visible,
+.form-select:focus-visible {
+  border-color: var(--color-accent);
   box-shadow: 0 0 0 3px var(--color-focus-ring-shadow);
 }
 
 .form-textarea {
-  min-height: 80px;
+  min-height: 100px;
   resize: vertical;
 }
 
+.form-input:invalid:not(:placeholder-shown),
+.form-textarea:invalid:not(:placeholder-shown) {
+  border-color: var(--color-danger);
+}
+
+.form-input:invalid:not(:placeholder-shown):focus-visible,
+.form-textarea:invalid:not(:placeholder-shown):focus-visible {
+  box-shadow: 0 0 0 3px var(--color-danger-focus-shadow);
+}
+
 .form-help-text {
-  font-size: 0.75rem;
   color: var(--color-text-muted);
+  font-size: 12px;
 }
 
 .modal-footer {
   display: flex;
   justify-content: flex-end;
-  gap: var(--space-sm);
-  padding-top: var(--space-sm);
+  gap: 10px;
+  margin: 0 -22px -22px;
+  padding: 16px 22px;
+  border-top: var(--border-width) solid var(--color-border);
+  background: var(--color-section-background);
 }

@@ -2,27 +2,39 @@
    When to edit: change badge padding, font-size, or add styling for new priorities. */
 
 .priority-badge {
-  display: inline-block;
-  padding: 2px 8px;
-  border-radius: var(--radius-sm);
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 0 8px;
+  border: var(--border-width) solid currentColor;
+  border-radius: 2em;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 20px;
+}
+
+.priority-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: currentColor;
 }
 
 .badge--high {
   background-color: var(--color-priority-high-bg);
   color: var(--color-priority-high-text);
+  border-color: var(--color-priority-high-text);
 }
 
 .badge--medium {
   background-color: var(--color-priority-medium-bg);
   color: var(--color-priority-medium-text);
+  border-color: var(--color-priority-medium-text);
 }
 
 .badge--low {
   background-color: var(--color-priority-low-bg);
   color: var(--color-priority-low-text);
+  border-color: var(--color-priority-low-text);
 }
-

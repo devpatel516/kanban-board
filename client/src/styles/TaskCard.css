@@ -1,46 +1,42 @@
-/* What this file does: styles individual task cards, tags, and the fallback move menu.
-   When to edit: change card shadows, tag pill appearance, or move dropdown styling. */
+/* What this file does: styles task cards and their action menu.
+   When to edit: change card spacing, text, labels, or action-menu appearance. */
 
 .task-card {
-  background-color: var(--color-card-background);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: var(--space-md);
-  box-shadow: var(--shadow-card);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm);
+  gap: 10px;
+  padding: 14px;
+  border: var(--border-width) solid var(--color-border-muted);
+  border-radius: 14px;
+  background: var(--color-card-background);
+  box-shadow: var(--shadow-card);
+  transition: box-shadow 140ms ease, transform 140ms ease, border-color 140ms ease;
 }
 
 .task-card:hover {
+  border-color: var(--color-border);
   box-shadow: var(--shadow-card-hover);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 }
 
 .task-card-header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: var(--space-sm);
+  gap: 8px;
 }
 
 .task-card-title-group {
   display: flex;
-  align-items: flex-start;
-  gap: var(--space-xs);
   min-width: 0;
+  align-items: flex-start;
+  gap: 6px;
 }
 
 .task-card-drag-handle {
-  border: 0;
-  padding: 0 2px;
-  background: none;
-  color: var(--color-text-light);
+  flex: 0 0 28px;
   cursor: grab;
   touch-action: none;
-  font-size: 1.1rem;
-  line-height: 1.2;
 }
 
 .task-card-drag-handle:active {
@@ -52,125 +48,123 @@
 }
 
 .task-card-drag-overlay {
-  background-color: var(--color-drag-overlay-background);
-  border-color: var(--color-drag-overlay-border);
-  box-shadow: var(--shadow-card-hover);
-  transform: rotate(1deg);
+  border-color: var(--color-accent);
+  background: var(--color-drag-overlay-background);
+  box-shadow: var(--shadow-drag-overlay);
+  transform: translateY(-2px);
+  cursor: grabbing;
 }
 
 .task-card-title {
-  font-size: 0.95rem;
+  overflow-wrap: anywhere;
+  color: var(--color-text-primary);
+  font-size: 15px;
   font-weight: 600;
-  color: var(--color-text);
   line-height: 1.35;
-  word-break: break-word;
 }
 
 .task-card-description {
-  font-size: 0.85rem;
+  display: -webkit-box;
+  overflow: hidden;
   color: var(--color-text-muted);
-  line-height: 1.4;
-  word-break: break-word;
+  font-size: 13px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .task-card-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-xs);
+  gap: 5px;
 }
 
 .task-tag {
-  background-color: var(--color-tag-background);
+  padding: 2px 9px;
+  border: var(--border-width) solid var(--color-border-muted);
+  border-radius: var(--radius-pill);
+  background: var(--color-tag-background);
   color: var(--color-tag-text);
-  font-size: 0.72rem;
-  padding: 2px 6px;
-  border-radius: var(--radius-sm);
+  font-size: 11px;
+  line-height: 18px;
 }
 
 .task-card-footer {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-top: var(--space-xs);
-  border-top: 1px solid var(--color-border);
-  margin-top: var(--space-xs);
-  gap: var(--space-xs);
+  justify-content: flex-end;
+  padding-top: 6px;
+  border-top: var(--border-width) solid var(--color-border-muted);
 }
 
-.task-card-actions {
-  display: flex;
-  align-items: center;
-  gap: var(--space-xs);
-}
-
-.icon-button {
-  background: none;
-  border: none;
-  padding: 4px;
-  cursor: pointer;
-  border-radius: var(--radius-sm);
-  color: var(--color-text-muted);
-  font-size: 0.85rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.icon-button:hover {
-  background-color: var(--color-surface-hover);
-  color: var(--color-text);
-}
-
-.icon-button-danger:hover {
-  background-color: var(--color-priority-high-bg);
-  color: var(--color-danger);
-}
-
-/* ── Fallback / Keyboard Move Menu ─────────────────────────────────────────── */
-.move-menu {
-  position: relative;
-  display: inline-block;
+.card-menu-button {
+  width: 30px;
+  height: 30px;
 }
 
 .move-menu-dropdown {
   position: fixed;
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-modal);
-  padding: var(--space-xs);
   z-index: 50;
-  width: 176px;
   display: flex;
+  width: 192px;
   flex-direction: column;
   gap: 2px;
+  padding: 6px;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-card-background);
+  box-shadow: var(--shadow-menu);
 }
 
 .move-menu-item {
-  background: none;
-  border: none;
+  display: flex;
+  min-height: 36px;
+  align-items: center;
+  gap: 9px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-size: 14px;
   text-align: left;
-  padding: 6px 10px;
-  font-size: 0.8rem;
-  border-radius: var(--radius-sm);
   cursor: pointer;
-  color: var(--color-text);
-  font-family: inherit;
-  width: 100%;
 }
 
-.move-menu-item:hover {
-  background-color: var(--color-surface-hover);
-  color: var(--color-primary);
+.move-menu-item > svg {
+  flex: 0 0 16px;
+  color: var(--color-text-muted);
+}
+
+.move-menu-item:hover:not(:disabled) {
+  background: var(--color-neutral-hover);
 }
 
 .move-menu-item:disabled {
-  opacity: 0.4;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
+.move-menu-item-danger {
+  color: var(--color-danger);
+}
+
+.move-menu-item-danger > svg {
+  color: var(--color-danger);
+}
+
+.move-menu-item-danger:hover:not(:disabled) {
+  background: var(--color-danger);
+  color: var(--color-danger-text);
+}
+
+.move-menu-item-danger:hover:not(:disabled) > svg {
+  color: var(--color-danger-text);
+}
+
 .move-menu-divider {
-  height: 1px;
-  background-color: var(--color-border);
-  margin: 3px 0;
+  height: var(--border-width);
+  margin: 4px 0;
+  background: var(--color-border);
 }

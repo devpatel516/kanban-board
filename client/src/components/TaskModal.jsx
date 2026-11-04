@@ -3,6 +3,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { PRIORITIES } from "../constants.js";
+import { XIcon } from "./Icons.jsx";
 import "../styles/TaskModal.css";
 
 // Collects task fields and prevents another save while the current request is running.
@@ -96,11 +97,11 @@ function TaskModal({ isOpen, onClose, onSave, taskToEdit = null, defaultColumnId
           </h2>
           <button
             type="button"
-            className="modal-close-button"
+            className="btn-invisible modal-close-button"
             onClick={onClose}
             aria-label="Close dialog"
           >
-            ✕
+            <XIcon />
           </button>
         </header>
 
@@ -169,7 +170,7 @@ function TaskModal({ isOpen, onClose, onSave, taskToEdit = null, defaultColumnId
           <footer className="modal-footer">
             <button
               type="button"
-              className="btn btn-secondary"
+              className="btn"
               onClick={onClose}
               disabled={isSaving}
             >
