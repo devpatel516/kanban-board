@@ -2,7 +2,7 @@
 //   simple action functions to every component that needs them.
 // When to edit: add a new action (duplicate task, archive), change how data loads.
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import toast from "react-hot-toast";
 import * as tasksApi from "../api/tasksApi.js";
 import { ORDER_GAP } from "../constants.js";
@@ -17,6 +17,17 @@ export function useBoard() {
 
   // Holds an error message string if the initial load fails; null when healthy.
   const [error, setError] = useState(null);
+  const tasksRef = useRef([]);
+  const latestRequestNumber = useRef(0);
+
+  // Like one person serving a line at a counter, each move waits for the move before it.
+  const lastMovePromise = useRef(Promise.resolve());
+
+  // Updates React state and its matching ref together for queued async moves.
+  function updateTasks(nextTasks) {
+    tasksRef.current = nextTasks;
+    setTasks(nextTasks);
+  }
 
   // ── Load ────────────────────────────────────────────────────────────────────
 
@@ -24,19 +35,26 @@ export function useBoard() {
   // Called once on mount (via useEffect) and again after every mutation
   // so the board always shows what the database actually contains.
   async function loadTasks(showLoading = true, reportRefreshError = true) {
+    const requestNumber = latestRequestNumber.current + 1;
+    latestRequestNumber.current = requestNumber;
     if (showLoading) setIsLoading(true);
     setError(null);
     try {
       const data = await tasksApi.getTasks();
-      setTasks(data);
+      // Ignore older responses so a slow request cannot overwrite newer server data.
+      if (requestNumber < latestRequestNumber.current) return;
+      updateTasks(data);
     } catch (err) {
+      if (requestNumber < latestRequestNumber.current) return;
       if (showLoading) {
         setError(err.message);
       } else if (reportRefreshError) {
         toast.error(err.message);
       }
     } finally {
-      if (showLoading) setIsLoading(false);
+      if (requestNumber === latestRequestNumber.current) {
+        setIsLoading(false);
+      }
     }
   }
 
@@ -68,14 +86,14 @@ export function useBoard() {
       createdAt: now,
       updatedAt: now,
     };
-    setTasks([...snapshot, optimisticTask]);
+    updateTasks([...snapshot, optimisticTask]);
 
     try {
       // 3) Save the new card on the server.
       await tasksApi.createTask(taskData);
     } catch (err) {
       // 4) Restore the snapshot, explain the failure, then ask the server for its latest list.
-      setTasks(snapshot);
+      updateTasks(snapshot);
       toast.error(err.message);
       await loadTasks(false, false);
       throw err; // re-throw so the modal can catch it and NOT close
@@ -91,7 +109,7 @@ export function useBoard() {
     const snapshot = [...tasks];
 
     // 2) Update only the edited card in the visible list.
-    setTasks(snapshot.map((task) => (
+    updateTasks(snapshot.map((task) => (
       task._id === id ? { ...task, ...taskData } : task
     )));
 
@@ -100,7 +118,7 @@ export function useBoard() {
       await tasksApi.updateTask(id, taskData);
     } catch (err) {
       // 4) Restore the snapshot, explain the failure, then ask the server for its latest list.
-      setTasks(snapshot);
+      updateTasks(snapshot);
       toast.error(err.message);
       await loadTasks(false, false);
       throw err;
@@ -115,14 +133,14 @@ export function useBoard() {
     const snapshot = [...tasks];
 
     // 2) Remove the card from the visible list before contacting the server.
-    setTasks(snapshot.filter((task) => task._id !== id));
+    updateTasks(snapshot.filter((task) => task._id !== id));
 
     try {
       // 3) Delete the card on the server.
       await tasksApi.deleteTask(id);
     } catch (err) {
       // 4) Restore the snapshot, explain the failure, then ask the server for its latest list.
-      setTasks(snapshot);
+      updateTasks(snapshot);
       toast.error(err.message);
       await loadTasks(false, false);
       return;
@@ -134,9 +152,9 @@ export function useBoard() {
   // Moves a task to a new column and/or position.
   // moveBody = { columnId, prevId, nextId, version }
   // The Column component computes prevId/nextId based on neighbour cards.
-  async function moveTask(id, moveBody) {
+  async function performMoveTask(id, moveBody) {
     // 1) Save the current list so a failed request can restore exactly what was visible.
-    const snapshot = [...tasks];
+    const snapshot = [...tasksRef.current];
     const movingTask = snapshot.find((task) => task._id === id);
     if (!movingTask) return;
 
@@ -174,19 +192,40 @@ export function useBoard() {
     };
     const optimisticTasks = [...remainingTasks];
     optimisticTasks.splice(insertionIndex, 0, optimisticTask);
-    setTasks(optimisticTasks);
+    updateTasks(optimisticTasks);
 
     try {
       // 3) Save the new position on the server.
-      await tasksApi.moveTask(id, moveBody);
+      // The version comes from the newest task in state, not from an old drag callback.
+      const updatedTask = await tasksApi.moveTask(id, {
+        ...moveBody,
+        version: movingTask.version,
+      });
+
+      // Keep the new version available if another queued move starts before the list reload ends.
+      if (updatedTask && Number.isInteger(updatedTask.version)) {
+        const currentTasks = tasksRef.current.map((task) => (
+          task._id === id ? { ...task, version: updatedTask.version } : task
+        ));
+        updateTasks(currentTasks);
+      }
     } catch (err) {
       // 4) Restore the snapshot, explain the failure, then ask the server for its latest list.
-      setTasks(snapshot);
+      updateTasks(snapshot);
       toast.error(err.message);
       await loadTasks(false, false);
       return;
     }
     await loadTasks(false);
+  }
+
+  // Adds each new move to a promise chain so two requests never race on the same board.
+  function moveTask(id, moveBody) {
+    const nextMovePromise = lastMovePromise.current.then(
+      () => performMoveTask(id, moveBody),
+    );
+    lastMovePromise.current = nextMovePromise.catch(() => {});
+    return nextMovePromise;
   }
 
   return {

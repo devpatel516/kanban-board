@@ -5,13 +5,14 @@ import { useState, useEffect, useRef } from "react";
 import { PRIORITIES } from "../constants.js";
 import "../styles/TaskModal.css";
 
+// Collects task fields and prevents another save while the current request is running.
 function TaskModal({ isOpen, onClose, onSave, taskToEdit = null, defaultColumnId = "todo" }) {
   // Controlled form state
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState("Medium");
   const [tagsInput, setTagsInput] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   // Reference to the title input field so we can focus it automatically when opening
   const titleInputRef = useRef(null);
@@ -53,7 +54,7 @@ function TaskModal({ isOpen, onClose, onSave, taskToEdit = null, defaultColumnId
 
   async function handleSubmit(event) {
     event.preventDefault();
-    if (!title.trim()) return;
+    if (!title.trim() || isSaving) return;
 
     // Split comma-separated tags and remove leading/trailing whitespace
     const cleanTags = tagsInput
@@ -69,14 +70,14 @@ function TaskModal({ isOpen, onClose, onSave, taskToEdit = null, defaultColumnId
       columnId: taskToEdit ? taskToEdit.columnId : defaultColumnId,
     };
 
-    setIsSubmitting(true);
+    setIsSaving(true);
     try {
       await onSave(taskPayload);
       onClose();
     } catch {
       // Error is handled with a toast in useBoard hook; keep modal open on failure
     } finally {
-      setIsSubmitting(false);
+      setIsSaving(false);
     }
   }
 
@@ -170,16 +171,16 @@ function TaskModal({ isOpen, onClose, onSave, taskToEdit = null, defaultColumnId
               type="button"
               className="btn btn-secondary"
               onClick={onClose}
-              disabled={isSubmitting}
+              disabled={isSaving}
             >
               Cancel
             </button>
             <button
               type="submit"
               className="btn btn-primary"
-              disabled={isSubmitting || !title.trim()}
+              disabled={isSaving || !title.trim()}
             >
-              {isSubmitting ? "Saving..." : taskToEdit ? "Save Changes" : "Create Task"}
+              {isSaving ? "Saving..." : taskToEdit ? "Save Changes" : "Create Task"}
             </button>
           </footer>
         </form>
@@ -189,4 +190,3 @@ function TaskModal({ isOpen, onClose, onSave, taskToEdit = null, defaultColumnId
 }
 
 export default TaskModal;
-
