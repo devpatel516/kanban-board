@@ -1,0 +1,28 @@
+/* What this file does: styles the priority badge pill on a task card.
+   When to edit: change badge padding, font-size, or add styling for new priorities. */
+
+.priority-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.badge--high {
+  background-color: var(--color-priority-high-bg);
+  color: var(--color-priority-high-text);
+}
+
+.badge--medium {
+  background-color: var(--color-priority-medium-bg);
+  color: var(--color-priority-medium-text);
+}
+
+.badge--low {
+  background-color: var(--color-priority-low-bg);
+  color: var(--color-priority-low-text);
+}
+

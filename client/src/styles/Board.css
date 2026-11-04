@@ -1,0 +1,70 @@
+/* What this file does: styles the board container, responsive layout, and status screens.
+   When to edit: change column gaps, adjust mobile breakpoint, or style the error/loading view. */
+
+.board-container {
+  padding: var(--space-lg);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ── Columns layout: horizontal scroll on desktop, stack on mobile ───────────── */
+.board-columns-grid {
+  display: flex;
+  gap: var(--column-gap);
+  align-items: flex-start;
+  overflow-x: auto;
+  padding-bottom: var(--space-md);
+}
+
+/* Responsive: stack columns vertically on screens narrower than 768px */
+@media (max-width: 768px) {
+  .board-columns-grid {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .board-column {
+    width: 100%;
+    min-width: 100%;
+    max-height: none;
+  }
+}
+
+/* ── Loading, Empty, and Error States ────────────────────────────────────────── */
+.board-status-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 400px;
+  gap: var(--space-md);
+  color: var(--color-text-muted);
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.status-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.status-message {
+  font-size: 0.95rem;
+  max-width: 400px;
+}
+

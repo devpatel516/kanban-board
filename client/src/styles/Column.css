@@ -1,0 +1,81 @@
+/* What this file does: styles a board column, its header, card list, and empty state.
+   When to edit: change column widths, card gap spacing, or empty state appearance. */
+
+.board-column {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  width: var(--column-width);
+  min-width: var(--column-width);
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - var(--header-height) - (var(--space-lg) * 2));
+}
+
+.column-header {
+  padding: var(--space-md);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+.column-header-title-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.column-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.indicator--todo {
+  background-color: var(--color-todo);
+}
+
+.indicator--in-progress {
+  background-color: var(--color-in-progress);
+}
+
+.indicator--done {
+  background-color: var(--color-done);
+}
+
+.column-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.column-count {
+  background-color: var(--color-bg);
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.column-tasks-list {
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  overflow-y: auto;
+  flex: 1;
+}
+
+.column-empty-state {
+  text-align: center;
+  padding: var(--space-xl) var(--space-md);
+  color: var(--color-text-light);
+  font-size: 0.875rem;
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  margin: var(--space-xs) 0;
+}
+

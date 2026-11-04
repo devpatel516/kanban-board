@@ -1,0 +1,45 @@
+/* What this file does: styles the top header bar.
+   When to edit: change the logo, header height, or add navigation links. */
+
+.app-header {
+  height: var(--header-height);
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-lg);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  /* keeps the header above the board content when scrolling */
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.header-logo {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.header-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-text);
+  letter-spacing: -0.02em;
+}
+
+.header-subtitle {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  background-color: var(--color-bg);
+  padding: 2px var(--space-xs);
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+  margin-left: var(--space-xs);
+}
+
